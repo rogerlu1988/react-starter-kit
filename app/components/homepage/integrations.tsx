@@ -3,7 +3,6 @@ import { Link } from "react-router";
 import { LogoIcon } from "~/components/logo";
 import {
   Convex,
-  Polar,
   ReactIcon,
   ReactRouter,
   TailwindIcon,
@@ -16,7 +15,7 @@ import { Navbar } from "./navbar";
 export default function IntegrationsSection({
   loaderData,
 }: {
-  loaderData?: { isSignedIn: boolean; hasActiveSubscription: boolean };
+  loaderData?: { isSignedIn: boolean };
 }) {
   return (
     <section id="hero">
@@ -53,10 +52,6 @@ export default function IntegrationsSection({
                 <IntegrationCard>
                   <Typescript />
                 </IntegrationCard>
-
-                <IntegrationCard>
-                  <Polar />
-                </IntegrationCard>
               </div>
             </div>
             <div className="mx-auto mt-6 max-w-lg space-y-6 text-center sm:mt-0 sm:text-left">
@@ -71,20 +66,12 @@ export default function IntegrationsSection({
               <div className="flex gap-3">
                 <Button size="sm" asChild>
                   <Link
-                    to={
-                      loaderData?.isSignedIn
-                        ? loaderData?.hasActiveSubscription
-                          ? "/dashboard"
-                          : "/pricing"
-                        : "/sign-up"
-                    }
+                    to={loaderData?.isSignedIn ? "/dashboard" : "/sign-up"}
                     prefetch="viewport"
                   >
                     {loaderData?.isSignedIn
-                      ? loaderData?.hasActiveSubscription
-                        ? "Go to Dashboard (Demo)"
-                        : "Subscribe Now (Demo)"
-                      : "Get Started (Demo)"}
+                      ? "Go to Dashboard"
+                      : "Get Started"}
                   </Link>
                 </Button>
                 <Button variant="outline" size="sm" asChild>
@@ -93,7 +80,7 @@ export default function IntegrationsSection({
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    ⭐️ Start on GitHub
+                    ⭐️ Star on GitHub
                   </Link>
                 </Button>
               </div>
