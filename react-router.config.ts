@@ -13,4 +13,4 @@ export default {
   future: {
     unstable_optimizeDeps: false,
   },
-} satisfies Config;
+} satisfies Config; 
