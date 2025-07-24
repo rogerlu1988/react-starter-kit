@@ -1,0 +1,31 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npx convex deploy --cmd 'npm run build'",
+  "installCommand": "npm ci",
+  "devCommand": "npm run dev",
+  "framework": null,
+  "outputDirectory": "build/client",
+  "routes": [
+    {
+      "src": "/webhook/polar",
+      "dest": "/webhook/polar"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ],
+  "functions": {
+    "build/server/**/*.js": {
+      "runtime": "nodejs18.x"
+    }
+  },
+  "env": {
+    "VITE_CONVEX_URL": "@vite_convex_url",
+    "CONVEX_DEPLOYMENT": "@convex_deployment",
+    "VITE_CLERK_PUBLISHABLE_KEY": "@vite_clerk_publishable_key",
+    "CLERK_SECRET_KEY": "@clerk_secret_key",
+    "FRONTEND_URL": "@frontend_url",
+    "NEXT_PUBLIC_CONVEX_URL": "@next_public_convex_url"
+  }
+}
