@@ -3,6 +3,13 @@ import { paymentWebhook } from "./subscriptions";
 import { httpAction } from "./_generated/server";
 import { openai } from "@ai-sdk/openai";
 import { streamText } from "ai";
+import Stripe from "stripe";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: "2025-07-30.basil" as const,
+});
+
+const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
 export const chat = httpAction(async (ctx, req) => {
   // Extract the `messages` from the body of the request
@@ -36,6 +43,54 @@ http.route({
   path: "/api/chat",
   method: "POST",
   handler: chat,
+});
+
+http.route({
+  path: "/webhook/stripe",
+  method: "POST",
+  handler: httpAction(async (ctx, request) => {
+    if (!webhookSecret) {
+      throw new Error("Missing STRIPE_WEBHOOK_SECRET");
+    }
+
+    const signature = request.headers.get("stripe-signature");
+    if (!signature) {
+      return new Response("No signature", { status: 400 });
+    }
+
+    const body = await request.text();
+    let event: Stripe.Event;
+
+    try {
+      event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
+    } catch (err) {
+      console.error("Webhook signature verification failed", err);
+      return new Response("Invalid signature", { status: 400 });
+    }
+
+    try {
+      switch (event.type) {
+        case "payment_intent.succeeded":
+          const paymentIntent = event.data.object as Stripe.PaymentIntent;
+          // Handle successful payment
+          // Handle successful payment in your database
+          console.log("Payment succeeded:", paymentIntent.id);
+          break;
+        case "payment_intent.payment_failed":
+          const failedPayment = event.data.object as Stripe.PaymentIntent;
+          // Handle failed payment
+          console.error("Payment failed:", failedPayment.id);
+          break;
+        default:
+          console.log(`Unhandled event type ${event.type}`);
+      }
+
+      return new Response("Webhook processed", { status: 200 });
+    } catch (err) {
+      console.error("Error processing webhook:", err);
+      return new Response("Webhook error", { status: 500 });
+    }
+  }),
 });
 
 http.route({

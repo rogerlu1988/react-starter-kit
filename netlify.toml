@@ -1,0 +1,20 @@
+[build]
+  command = "npm install && remix build"
+  publish = "build"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "20"
+  VITE_CONVEX_URL = "https://necessary-goose-619.convex.cloud"
+  VITE_CLERK_PUBLISHABLE_KEY = "your_clerk_key"
+  STRIPE_PUBLISHABLE_KEY = "your_stripe_publishable_key"
+
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/server"
+  status = 200
+
+[[headers]]
+  for = "/*"
+    [headers.values]
+    Access-Control-Allow-Origin = "*"

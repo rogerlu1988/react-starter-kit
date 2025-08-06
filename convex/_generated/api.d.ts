@@ -8,7 +8,14 @@
  * @module
  */
 
+import type * as api_ from "../api.js";
+import type * as appointments from "../appointments.js";
+import type * as client from "../client.js";
 import type * as http from "../http.js";
+import type * as index from "../index.js";
+import type * as providers from "../providers.js";
+import type * as services from "../services.js";
+import type * as stripe from "../stripe.js";
 import type * as subscriptions from "../subscriptions.js";
 import type * as users from "../users.js";
 
@@ -27,7 +34,14 @@ import type {
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  api: typeof api_;
+  appointments: typeof appointments;
+  client: typeof client;
   http: typeof http;
+  index: typeof index;
+  providers: typeof providers;
+  services: typeof services;
+  stripe: typeof stripe;
   subscriptions: typeof subscriptions;
   users: typeof users;
 }>;
